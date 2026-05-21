@@ -1,10 +1,27 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import AuthorBanner from "../images/author_banner.jpg";
 import AuthorItems from "../components/author/AuthorItems";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import AuthorImage from "../images/author_thumbnail.jpg";
+import axios from "axios";
 
 const Author = () => {
+  const { authorId } = useParams();
+  const [author, setAuthor] = useState(null);
+
+  useEffect(() => {
+    if (!authorId) return;
+    axios
+      .get("https://us-central1-nft-cloud-functions.cloudfunctions.net/topSellers")
+      .then((res) => {
+        const found = res.data.find((s) => String(s.authorId) === String(authorId));
+        if (found) setAuthor(found);
+      });
+  }, [authorId]);
+
+  const displayImage = author ? author.authorImage : AuthorImage;
+  const displayName = author ? author.authorName : "Monica Lucas";
+
   return (
     <div id="wrapper">
       <div className="no-bottom no-top" id="content">
@@ -25,15 +42,13 @@ const Author = () => {
                 <div className="d_profile de-flex">
                   <div className="de-flex-col">
                     <div className="profile_avatar">
-                      <img src={AuthorImage} alt="" />
-
+                      <img src={displayImage} alt="" />
                       <i className="fa fa-check"></i>
                       <div className="profile_name">
                         <h4>
-                          Monica Lucas
-                          <span className="profile_username">@monicaaaa</span>
+                          {displayName}
                           <span id="wallet" className="profile_wallet">
-                            UDHUHWudhwd78wdt7edb32uidbwyuidhg7wUHIFUHWewiqdj87dy7
+                            {authorId || "UDHUHWudhwd78wdt7edb32uidbwyuidhg7wUHIFUHWewiqdj87dy7"}
                           </span>
                           <button id="btn_copy" title="Copy Text">
                             Copy
