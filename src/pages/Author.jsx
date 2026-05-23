@@ -12,15 +12,14 @@ const Author = () => {
   useEffect(() => {
     if (!authorId) return;
     axios
-      .get("https://us-central1-nft-cloud-functions.cloudfunctions.net/topSellers")
-      .then((res) => {
-        const found = res.data.find((s) => String(s.authorId) === String(authorId));
-        if (found) setAuthor(found);
-      });
+      .get(`https://us-central1-nft-cloud-functions.cloudfunctions.net/authors?author=${authorId}`)
+      .then((res) => setAuthor(res.data));
   }, [authorId]);
 
   const displayImage = author ? author.authorImage : AuthorImage;
   const displayName = author ? author.authorName : "Monica Lucas";
+  const displayAddress = author ? author.address : "UDHUHWudhwd78wdt7edb32uidbwyuidhg7wUHIFUHWewiqdj87dy7";
+  const displayFollowers = author ? author.followers : 0;
 
   return (
     <div id="wrapper">
@@ -47,8 +46,11 @@ const Author = () => {
                       <div className="profile_name">
                         <h4>
                           {displayName}
+                          {author?.tag && (
+                            <span className="profile_username">@{author.tag}</span>
+                          )}
                           <span id="wallet" className="profile_wallet">
-                            {authorId || "UDHUHWudhwd78wdt7edb32uidbwyuidhg7wUHIFUHWewiqdj87dy7"}
+                            {displayAddress}
                           </span>
                           <button id="btn_copy" title="Copy Text">
                             Copy
@@ -59,7 +61,7 @@ const Author = () => {
                   </div>
                   <div className="profile_follow de-flex">
                     <div className="de-flex-col">
-                      <div className="profile_follower">573 followers</div>
+                      <div className="profile_follower">{displayFollowers} followers</div>
                       <Link to="#" className="btn-main">
                         Follow
                       </Link>
@@ -70,7 +72,11 @@ const Author = () => {
 
               <div className="col-md-12">
                 <div className="de_tab tab_simple">
-                  <AuthorItems />
+                  <AuthorItems
+                    nftCollection={author?.nftCollection}
+                    authorId={authorId}
+                    authorImage={displayImage}
+                  />
                 </div>
               </div>
             </div>
