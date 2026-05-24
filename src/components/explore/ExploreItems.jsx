@@ -16,7 +16,15 @@ const CountdownTimer = ({ expiryDate }) => {
   const [timeLeft, setTimeLeft] = useState(calc);
 
   useEffect(() => {
-    const timer = setInterval(() => setTimeLeft(calc()), 1000);
+    const tick = () => {
+      const diff = expiryDate - Date.now();
+      if (diff <= 0) { setTimeLeft(null); return; }
+      const h = Math.floor(diff / 3600000);
+      const m = Math.floor((diff % 3600000) / 60000);
+      const s = Math.floor((diff % 60000) / 1000);
+      setTimeLeft(`${h}h ${m}m ${s}s`);
+    };
+    const timer = setInterval(tick, 1000);
     return () => clearInterval(timer);
   }, [expiryDate]);
 
@@ -111,13 +119,13 @@ const ExploreItems = () => {
                   <button>Buy Now</button>
                   <div className="nft__item_share">
                     <h4>Share</h4>
-                    <a href="" target="_blank" rel="noreferrer">
+                    <a href="#" target="_blank" rel="noreferrer">
                       <i className="fa fa-facebook fa-lg"></i>
                     </a>
-                    <a href="" target="_blank" rel="noreferrer">
+                    <a href="#" target="_blank" rel="noreferrer">
                       <i className="fa fa-twitter fa-lg"></i>
                     </a>
-                    <a href="">
+                    <a href="#">
                       <i className="fa fa-envelope fa-lg"></i>
                     </a>
                   </div>
