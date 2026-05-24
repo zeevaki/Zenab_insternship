@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
+import Skeleton from "../UI/Skeleton";
 
 const responsive = {
   superLargeDesktop: { breakpoint: { max: 4000, min: 1200 }, items: 4 },
@@ -35,11 +36,15 @@ const CountdownTimer = ({ expiryDate }) => {
 const NewItems = () => {
   const [items, setItems] = useState([]);
   const [liked, setLiked] = useState({});
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     axios
       .get("https://us-central1-nft-cloud-functions.cloudfunctions.net/newItems")
-      .then((res) => setItems(res.data));
+      .then((res) => {
+        setItems(res.data);
+        setLoading(false);
+      });
   }, []);
 
   const toggleLike = (id) => {
@@ -51,12 +56,12 @@ const NewItems = () => {
       <div className="container">
         <div className="row">
           <div className="col-lg-12">
-            <div className="text-center">
+            <div className="text-center" data-aos="fade-up">
               <h2>New Items</h2>
               <div className="small-border bg-color-2"></div>
             </div>
           </div>
-          <div className="col-lg-12">
+          <div className="col-lg-12" data-aos="fade-left" data-aos-delay="100">
             <Carousel
               responsive={responsive}
               infinite={true}
@@ -65,7 +70,25 @@ const NewItems = () => {
               containerClass="carousel-container"
               itemClass="px-2"
             >
-              {items.map((item) => (
+              {loading
+                ? new Array(4).fill(0).map((_, index) => (
+                    <div key={index}>
+                      <div className="nft__item">
+                        <div className="author_list_pp">
+                          <Skeleton width="50px" height="50px" borderRadius="50%" />
+                        </div>
+                        <div className="nft__item_wrap">
+                          <Skeleton width="100%" height="200px" borderRadius="10px" />
+                        </div>
+                        <div className="nft__item_info">
+                          <Skeleton width="80%" height="20px" borderRadius="5px" />
+                          <br />
+                          <Skeleton width="50%" height="15px" borderRadius="5px" />
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                : items.map((item) => (
                 <div key={item.id}>
                   <div className="nft__item">
                     <div className="author_list_pp">

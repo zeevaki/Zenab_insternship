@@ -37,7 +37,7 @@ const Author = () => {
         <section aria-label="section">
           <div className="container">
             <div className="row">
-              <div className="col-md-12">
+              <div className="col-md-12" data-aos="fade-up">
                 <div className="d_profile de-flex">
                   <div className="de-flex-col">
                     <div className="profile_avatar">
@@ -70,7 +70,7 @@ const Author = () => {
                 </div>
               </div>
 
-              <div className="col-md-12">
+              <div className="col-md-12" data-aos="fade-up" data-aos-delay="100">
                 <div className="de_tab tab_simple">
                   <AuthorItems
                     nftCollection={author?.nftCollection}
